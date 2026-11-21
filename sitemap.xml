@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url><loc>https://USERNAME.github.io/REPO/index.html</loc></url>
+<url><loc>https://USERNAME.github.io/REPO/learn/index.html</loc></url>
+<url><loc>https://USERNAME.github.io/REPO/labs/index.html</loc></url>
+<url><loc>https://USERNAME.github.io/REPO/about/index.html</loc></url>
+<url><loc>https://USERNAME.github.io/REPO/learn/prompt-injection.html</loc></url>
+<url><loc>https://USERNAME.github.io/REPO/learn/jailbreak.html</loc></url>
+<url><loc>https://USERNAME.github.io/REPO/learn/data-leakage.html</loc></url>
+<url><loc>https://USERNAME.github.io/REPO/learn/excessive-agency.html</loc></url>
+<url><loc>https://USERNAME.github.io/REPO/learn/data-poisoning.html</loc></url>
+<url><loc>https://USERNAME.github.io/REPO/learn/adversarial-examples.html</loc></url>
+<url><loc>https://USERNAME.github.io/REPO/learn/model-extraction.html</loc></url>
+<url><loc>https://USERNAME.github.io/REPO/learn/deepfake.html</loc></url>
+<url><loc>https://USERNAME.github.io/REPO/labs/prompt-injection.html</loc></url>
+<url><loc>https://USERNAME.github.io/REPO/labs/indirect-injection.html</loc></url>
+<url><loc>https://USERNAME.github.io/REPO/labs/membership-inference.html</loc></url>
+<url><loc>https://USERNAME.github.io/REPO/labs/model-extraction.html</loc></url>
+<url><loc>https://USERNAME.github.io/REPO/labs/side-channel.html</loc></url>
+<url><loc>https://USERNAME.github.io/REPO/labs/rag-attacks.html</loc></url>
+<url><loc>https://USERNAME.github.io/REPO/labs/supply-chain.html</loc></url>
+<url><loc>https://USERNAME.github.io/REPO/labs/agent-risks.html</loc></url>
+<url><loc>https://USERNAME.github.io/REPO/labs/data-poisoning.html</loc></url>
+</urlset>

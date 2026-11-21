@@ -53,19 +53,23 @@
 <script>
 (function() {
   var D = window.SITE;
-  var completed = D.lessons.filter(function(l) { return window.TH.isDone("l", l.slug); }).length;
-  var total = D.lessons.length;
+  var doneLessons = D.lessons.filter(function(l) { return window.TH.isDone("l", l.slug); }).length;
+  var doneLabs = D.labs.filter(function(x) { return window.TH.isDone("x", x.slug); }).length;
+  var completed = doneLessons + doneLabs;
+  var total = D.lessons.length + D.labs.length;
+
   var statusEl = document.getElementById("cert-status");
   var controlsEl = document.getElementById("cert-controls");
   var canvas = document.getElementById("cert-canvas");
   var pdfBtn = document.getElementById("pdf-btn");
 
   if (completed < total) {
-    statusEl.innerHTML = "لقد أتممت <strong>" + completed + " من " + total + "</strong> دروس. أكمل جميع الدروس واجتز اختباراتها القصيرة لتتمكن من إصدار شهادتك.<br><br><a href='learn/index.html'>العودة إلى قائمة الدروس ←</a>";
+    var pct = Math.round((completed / total) * 100);
+    statusEl.innerHTML = "تقدّمك الحالي <strong>" + pct + "%</strong> (" + doneLessons + " من " + D.lessons.length + " دروس، و " + doneLabs + " من " + D.labs.length + " معامل).<br>أكمل جميع الدروس والمعامل العملية للوصول إلى 100% وإصدار شهادتك.<br><br><a href='learn/index.html'>الانتقال إلى الدروس ←</a> &nbsp;|&nbsp; <a href='labs/index.html'>الانتقال إلى المعامل ←</a>";
     return;
   }
 
-  statusEl.textContent = "مبارك! لقد أتممت جميع الدروس بنجاح. اكتب اسمك أدناه لمعاينة الشهادة وتحميلها بصيغة PDF:";
+  statusEl.textContent = "مبارك! لقد أتممت المسار بالكامل (100%) بنجاح. اكتب اسمك أدناه لمعاينة الشهادة وتحميلها بصيغة PDF:";
   controlsEl.style.display = "flex";
 
   var serial = localStorage.getItem("thagra-cert-id");
@@ -219,7 +223,7 @@
     // وصف المسار
     ctx.fillStyle = "#334155";
     ctx.font = "400 40px 'IBM Plex Sans Arabic', sans-serif";
-    ctx.fillText("تقديراً لإتمامه بنجاح جميع الدروس التفاعلية واجتياز الاختبارات التقييمية في المسار:", rightMargin, 845);
+    ctx.fillText("تقديراً لإتمامه بنجاح جميع الدروس التفاعلية والمعامل التطبيقية في المسار:", rightMargin, 845);
 
     ctx.fillStyle = "#047857";
     ctx.font = "bold 48px 'IBM Plex Sans Arabic', sans-serif";
@@ -300,7 +304,6 @@
   pdfBtn.onclick = function() {
     var studentName = document.getElementById("student-name").value.trim() || "certificate";
     var jsPDF = window.jspdf.jsPDF;
-    // إنشاء مستند PDF بمقاس A4 بالعرض (297mm × 210mm) بدون هوامش
     var doc = new jsPDF({
       orientation: "landscape",
       unit: "mm",

@@ -60,8 +60,9 @@ if(ls){
     (nx?'<a href="'+BASE+"learn/"+nx.slug+'.html">الدرس التالي ←</a>':'<a href="'+BASE+'labs/index.html">انتقل إلى المعامل ←</a>');
   var box=q("#quiz"),d=L.quiz;
   function certLink(){
-    return D.lessons.every(function(x){return S.l[x.slug]})
-      ?' <br><a href="'+BASE+'certificate.html" style="display:inline-block;margin-top:.5rem;font-weight:bold;text-decoration:underline;">🎉 أتممت جميع الدروس! اضغط هنا لإصدار شهادتك ←</a>'
+    var allDone = D.lessons.every(function(l){return isDone("l",l.slug)}) && D.labs.every(function(x){return isDone("x",x.slug)});
+    return allDone
+      ?' <br><a href="'+BASE+'certificate.html" style="display:inline-block;margin-top:.5rem;font-weight:bold;text-decoration:underline;">🎉 أتممت المسار بالكامل (100%)! اضغط هنا لإصدار شهادتك ←</a>'
       :"";
   }
   if(d){

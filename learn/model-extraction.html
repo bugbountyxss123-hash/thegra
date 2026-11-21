@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>استخراج النموذج — ثغرة</title>
+<meta name="description" content="كيف يُستنسخ نموذج عبر استعلاماته، وعلاقته بالتقطير، وكيف تدافع.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E🛡️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body data-nav="learn" data-lesson="model-extraction">
+<header id="site-header"></header>
+<main class="wrap">
+<section>
+<div class="crumb" id="crumb"></div>
+<h1>استخراج النموذج <span class="en">Model Extraction</span></h1>
+  <p>طرح أعداد ضخمة من الأسئلة عبر واجهة النموذج وتسجيل إجاباته لتدريب نموذج مقلِّد، فتُسرق قيمة استثمرت فيها الشركة وقتاً ومالاً. وقد تكشف الاستعلامات أيضاً معلومات عن بيانات التدريب.</p>
+  <h2>ما الذي يريده المهاجم؟</h2><p>نسخة تعمل مثل النموذج الهدف، وربما الوصول إلى تفاصيله الداخلية كالأوزان (weights) والانحيازات (biases)، وذلك بإرسال استعلامات ومراقبة المخرجات فقط. وقيمة النماذج كبيرة كملكية فكرية وكأمن، خصوصاً في البيئات الحساسة.</p><h2>سابقة من أمن المعلومات</h2><p>خوارزمية COMP128-1 استُخدمت للمصادقة وتوليد المفاتيح في شبكات الجوال GSM، وصُمّمت لحماية سرية مفاتيحها. ومع ذلك استخرج باحثون هذه المفاتيح بإرسال استعلامات متكررة. وقد امتدت الفكرة نفسها اليوم إلى أمن تعلّم الآلة.</p><h2>كيف يعمل الهجوم؟</h2><ol style="max-width:44rem"><li>يختار المهاجم مدخلات مدروسة ويرسلها إلى النموذج.</li><li>يسجّل المخرجات المقابلة فيبني مجموعة بيانات من أزواج (مدخل، مخرج).</li><li>يدرّب «نموذجاً بديلاً» (Surrogate Model) على هذه الأزواج ليقلّد الأصلي.</li></ol><h2>لماذا النموذج البديل خطير؟</h2><p>يصبح ساحة تدريب للمهاجم، يجرّب عليها دون أن ينبّه النموذج الأصلي. فيولّد أمثلة عدائية (Adversarial Examples) تنتقل غالباً إلى الأصلي، أو ينفّذ هجمات استنتاج العضوية ليعرف هل استُخدمت بيانات معيّنة في التدريب. فاستخراج النموذج يفتح الباب لهجمات أخرى.</p><h2>الفرق عن التقطير (Distillation)</h2><p>التقطير تقنية مشروعة يدرّب فيها صاحب النموذج نموذجاً صغيراً «طالباً» ليقلّد نموذجاً أكبر «معلّماً»، غالباً لتصغير الحجم وتسريعه. الآلية قريبة من الاستخراج، والفرق في الإذن: الأول يقوم به المالك، والثاني يقوم به طرف خارجي دون إذن.</p>
+  <h2>الدفاع</h2>
+  <div class="box"><ul><li>حدود لمعدل الطلبات لكل مستخدم.</li><li>مراقبة أنماط الاستعلام المشبوهة والمتكررة.</li><li>تقليل تفاصيل المخرجات، مثل الاحتمالات الدقيقة.</li><li>شروط استخدام واضحة وبصمات مائية للمخرجات.</li></ul></div>
+<div class="quiz" id="quiz"></div>
+<div class="pn" id="pn"></div>
+</section>
+</main>
+<footer id="site-footer"></footer>
+<script src="../assets/data.js"></script>
+<script src="../assets/site.js"></script>
+</body>
+</html>

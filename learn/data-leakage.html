@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>تسريب الأسرار — ثغرة</title>
+<meta name="description" content="كيف تُسرَّب الأسرار من النماذج، ولماذا لا تُحفظ المفاتيح داخلها.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E🛡️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body data-nav="learn" data-lesson="data-leakage">
+<header id="site-header"></header>
+<main class="wrap">
+<section>
+<div class="crumb" id="crumb"></div>
+<h1>تسريب الأسرار <span class="en">Data Leakage</span></h1>
+  <p>يكشف النموذج ما لا ينبغي كشفه: تعليمات النظام، أو مفاتيح، أو بيانات مستخدمين، أو معلومات حفظها من التدريب.</p>
+  <div class="box bad"><h3>خطأ شائع</h3><p>وضع كلمة مرور أو مفتاح API داخل تعليمات النظام مع افتراض أنها مخفية.</p></div>
+  <p>حجب كلمات معيّنة في المدخل أو المخرج فلتر هش، يتجاوزه المهاجم بتغيير الصياغة أو شكل الإخراج. ستجرّب هذا بنفسك في المعمل.</p>
+  <h2>الدفاع</h2>
+  <div class="box"><ul><li>لا تضع أسراراً داخل النموذج أصلاً.</li><li>احفظ الأسرار في الخادم خلف صلاحيات.</li><li>افترض أن تعليمات النظام قد تُكشف يوماً.</li></ul></div>
+<div class="quiz" id="quiz"></div>
+<div class="pn" id="pn"></div>
+</section>
+</main>
+<footer id="site-footer"></footer>
+<script src="../assets/data.js"></script>
+<script src="../assets/site.js"></script>
+</body>
+</html>

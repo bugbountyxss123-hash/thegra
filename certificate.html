@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>شهادة إتمام المسار — ثغرة</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E🛡️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  .cert-wrapper { text-align: center; margin: 1.5rem auto; }
+  .cert-form { display: flex; gap: .6rem; justify-content: center; flex-wrap: wrap; margin: 1.5rem 0; }
+  .cert-form input { padding: .7rem 1rem; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #f8fafc; font-family: inherit; font-size: 1rem; min-width: 280px; }
+  .cert-btn { padding: .7rem 1.5rem; border-radius: 6px; border: none; background: #10b981; color: #052e16; font-weight: 700; font-family: inherit; font-size: 1rem; cursor: pointer; transition: .2s; }
+  .cert-btn:hover { background: #34d399; }
+  .cert-btn.secondary { background: #0ea5e9; color: #082f49; }
+  .cert-btn.secondary:hover { background: #38bdf8; }
+  #cert-canvas {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    margin-top: 1rem;
+    display: none;
+  }
+</style>
+</head>
+<body data-nav="cert">
+<header id="site-header"></header>
+<main class="wrap">
+<section class="cert-wrapper">
+  <h1>شهادة إتمام مسار أمن الذكاء الاصطناعي</h1>
+  <p id="cert-status">جاري التحقق من تقدمك...</p>
+
+  <div class="cert-form" id="cert-controls" style="display:none;">
+    <input type="text" id="student-name" placeholder="اكتب اسمك الكامل (بالعربية أو الإنجليزية)" maxlength="45">
+    <button type="button" class="cert-btn" id="gen-btn">معاينة الشهادة</button>
+    <button type="button" class="cert-btn secondary" id="pdf-btn" style="display:none;">تحميل الشهادة (PDF)</button>
+  </div>
+
+  <!-- دقة عالية مطابقة لنسبة A4 Landscape -->
+  <canvas id="cert-canvas" width="2480" height="1754"></canvas>
+</section>
+</main>
+<footer id="site-footer"></footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function() {
+  var D = window.SITE;
+  var completed = D.lessons.filter(function(l) { return window.TH.isDone("l", l.slug); }).length;
+  var total = D.lessons.length;
+  var statusEl = document.getElementById("cert-status");
+  var controlsEl = document.getElementById("cert-controls");
+  var canvas = document.getElementById("cert-canvas");
+  var pdfBtn = document.getElementById("pdf-btn");
+
+  if (completed < total) {
+    statusEl.innerHTML = "لقد أتممت <strong>" + completed + " من " + total + "</strong> دروس. أكمل جميع الدروس واجتز اختباراتها القصيرة لتتمكن من إصدار شهادتك.<br><br><a href='learn/index.html'>العودة إلى قائمة الدروس ←</a>";
+    return;
+  }
+
+  statusEl.textContent = "مبارك! لقد أتممت جميع الدروس بنجاح. اكتب اسمك أدناه لمعاينة الشهادة وتحميلها بصيغة PDF:";
+  controlsEl.style.display = "flex";
+
+  var serial = localStorage.getItem("thagra-cert-id");
+  if (!serial) {
+    serial = "THG-" + new Date().getFullYear() + "-" + Math.floor(1000 + Math.random() * 9000);
+    localStorage.setItem("thagra-cert-id", serial);
+  }
+  var today = new Date().toLocaleDateString("ar-SA", { year: "numeric", month: "long", day: "numeric" });
+
+  function drawCertificate(studentName) {
+    var ctx = canvas.getContext("2d");
+    var W = canvas.width;  // 2480
+    var H = canvas.height; // 1754
+    var sideW = 540;       // عرض الشريط الجانبي الداكن
+
+    ctx.save();
+
+    // 1. الخلفية البيضاء الرئيسية
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, W, H);
+
+    // نقاط هندسية خفيفة في الخلفية البيضاء (أسلوب مايكروسوفت/قوقل)
+    ctx.fillStyle = "#e2e8f0";
+    for (var gx = 80; gx < W - sideW - 60; gx += 55) {
+      for (var gy = 80; gy < H - 80; gy += 55) {
+        ctx.beginPath();
+        ctx.arc(gx, gy, 2.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // 2. الشريط الجانبي الداكن (يمين الشهادة)
+    var grad = ctx.createLinearGradient(0, 0, 0, H);
+    grad.addColorStop(0, "#0b1120");
+    grad.addColorStop(1, "#1e293b");
+    ctx.fillStyle = grad;
+    ctx.fillRect(W - sideW, 0, sideW, H);
+
+    // خط أخضر فاصل بين الشريط الجانبي والمحتوى
+    ctx.fillStyle = "#10b981";
+    ctx.fillRect(W - sideW - 14, 0, 14, H);
+
+    // إطار خارجي رمادي رفيع للشهادة
+    ctx.strokeStyle = "#cbd5e1";
+    ctx.lineWidth = 4;
+    ctx.strokeRect(2, 2, W - 4, H - 4);
+
+    // --- محتوى الشريط الجانبي (يمين) ---
+    var sideCenter = W - (sideW / 2);
+
+    // اسم المنصة
+    ctx.textAlign = "center";
+    ctx.direction = "rtl";
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 66px 'IBM Plex Sans Arabic', sans-serif";
+    ctx.fillText("منصة ثغرة", sideCenter, 220);
+
+    ctx.direction = "ltr";
+    ctx.fillStyle = "#10b981";
+    ctx.font = "600 32px 'IBM Plex Mono', monospace";
+    ctx.fillText("THAGRA.ORG", sideCenter, 280);
+
+    // وسام الاعتماد الدائري في المنتصف
+    var badgeY = H / 2;
+    ctx.beginPath();
+    ctx.arc(sideCenter, badgeY, 175, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(16, 185, 129, 0.12)";
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(sideCenter, badgeY, 155, 0, Math.PI * 2);
+    ctx.fillStyle = "#0f172a";
+    ctx.fill();
+    ctx.lineWidth = 8;
+    ctx.strokeStyle = "#10b981";
+    ctx.stroke();
+
+    // علامة الصح داخل الوسام
+    ctx.strokeStyle = "#34d399";
+    ctx.lineWidth = 12;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.beginPath();
+    ctx.moveTo(sideCenter - 42, badgeY - 25);
+    ctx.lineTo(sideCenter - 10, badgeY + 10);
+    ctx.lineTo(sideCenter + 48, badgeY - 50);
+    ctx.stroke();
+
+    ctx.fillStyle = "#34d399";
+    ctx.font = "600 28px 'IBM Plex Mono', monospace";
+    ctx.fillText("AI SECURITY", sideCenter, badgeY + 65);
+
+    ctx.direction = "rtl";
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = "500 28px 'IBM Plex Sans Arabic', sans-serif";
+    ctx.fillText("مسار معتمد", sideCenter, badgeY + 112);
+
+    // رقم التحقق التسلسلي أسفل الشريط الجانبي
+    ctx.fillStyle = "#94a3b8";
+    ctx.font = "500 26px 'IBM Plex Sans Arabic', sans-serif";
+    ctx.fillText("رقم التحقق التسلسلي", sideCenter, H - 220);
+
+    // صندوق رقم التحقق
+    ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
+    ctx.fillRect(sideCenter - 170, H - 190, 340, 68);
+    ctx.direction = "ltr";
+    ctx.fillStyle = "#f8fafc";
+    ctx.font = "600 32px 'IBM Plex Mono', monospace";
+    ctx.fillText(serial, sideCenter, H - 145);
+
+    // --- المحتوى الرئيسي للشهادة (يسار الشريط الجانبي) ---
+    var rightMargin = W - sideW - 130;
+    var leftMargin = 130;
+
+    // ترويسة الشهادة
+    ctx.textAlign = "left";
+    ctx.direction = "ltr";
+    ctx.fillStyle = "#059669";
+    ctx.font = "600 32px 'IBM Plex Mono', monospace";
+    ctx.fillText("CERTIFICATE OF COMPLETION", leftMargin, 195);
+
+    ctx.textAlign = "right";
+    ctx.direction = "rtl";
+    ctx.fillStyle = "#0f172a";
+    ctx.font = "bold 92px 'IBM Plex Sans Arabic', sans-serif";
+    ctx.fillText("شهادة إتمام مسار تدريبي", rightMargin, 305);
+
+    ctx.fillStyle = "#64748b";
+    ctx.font = "500 36px 'IBM Plex Mono', monospace";
+    ctx.fillText("Official Recognition of Achievement", rightMargin, 368);
+
+    // عبارة المنح
+    ctx.fillStyle = "#475569";
+    ctx.font = "500 42px 'IBM Plex Sans Arabic', sans-serif";
+    ctx.fillText("تُمنح هذه الشهادة بكل فخر إلى:", rightMargin, 540);
+
+    // اسم المتدرب
+    ctx.fillStyle = "#0f172a";
+    ctx.font = "bold 104px 'IBM Plex Sans Arabic', sans-serif";
+    ctx.fillText(studentName, rightMargin, 685);
+
+    // خط أخضر تحت اسم المتدرب
+    var nameWidth = Math.max(ctx.measureText(studentName).width + 80, 750);
+    ctx.strokeStyle = "#10b981";
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.moveTo(rightMargin, 725);
+    ctx.lineTo(rightMargin - nameWidth, 725);
+    ctx.stroke();
+
+    // وصف المسار
+    ctx.fillStyle = "#334155";
+    ctx.font = "400 40px 'IBM Plex Sans Arabic', sans-serif";
+    ctx.fillText("تقديراً لإتمامه بنجاح جميع الدروس التفاعلية واجتياز الاختبارات التقييمية في المسار:", rightMargin, 845);
+
+    ctx.fillStyle = "#047857";
+    ctx.font = "bold 48px 'IBM Plex Sans Arabic', sans-serif";
+    ctx.fillText("أساسيات أمن الذكاء الاصطناعي وحماية النماذج اللغوية", rightMargin, 930);
+
+    ctx.direction = "ltr";
+    ctx.fillStyle = "#059669";
+    ctx.font = "600 36px 'IBM Plex Mono', monospace";
+    ctx.fillText("(AI Security & LLM Protection)", rightMargin, 995);
+
+    // خط فاصل علوي للتذييل
+    var footerY = 1320;
+    ctx.strokeStyle = "#cbd5e1";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(leftMargin, footerY);
+    ctx.lineTo(rightMargin, footerY);
+    ctx.stroke();
+
+    // --- التوقيع (يمين التذييل) ---
+    var sigCenter = rightMargin - 260;
+
+    // التوقيع الخطي
+    ctx.save();
+    ctx.translate(sigCenter, footerY + 125);
+    ctx.rotate(-0.04);
+    ctx.textAlign = "center";
+    ctx.direction = "ltr";
+    ctx.fillStyle = "#0f172a";
+    ctx.font = "86px 'Great Vibes', cursive";
+    ctx.fillText("Abdulrman Mohammad", 0, 0);
+    ctx.restore();
+
+    // خط التوقيع
+    ctx.strokeStyle = "#334155";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(sigCenter - 240, footerY + 155);
+    ctx.lineTo(sigCenter + 240, footerY + 155);
+    ctx.stroke();
+
+    ctx.textAlign = "center";
+    ctx.direction = "ltr";
+    ctx.fillStyle = "#0f172a";
+    ctx.font = "bold 34px 'IBM Plex Sans Arabic', sans-serif";
+    ctx.fillText("Abdulrman Mohammad", sigCenter, footerY + 205);
+
+    ctx.direction = "rtl";
+    ctx.fillStyle = "#64748b";
+    ctx.font = "500 28px 'IBM Plex Sans Arabic', sans-serif";
+    ctx.fillText("مؤسس منصة ثغرة — Founder, Thagra", sigCenter, footerY + 250);
+
+    // --- التاريخ (يسار التذييل) ---
+    ctx.textAlign = "left";
+    ctx.direction = "rtl";
+    ctx.fillStyle = "#64748b";
+    ctx.font = "500 30px 'IBM Plex Sans Arabic', sans-serif";
+    ctx.fillText("تاريخ الإصدار / Issue Date", leftMargin, footerY + 145);
+
+    ctx.fillStyle = "#0f172a";
+    ctx.font = "bold 38px 'IBM Plex Sans Arabic', sans-serif";
+    ctx.fillText(today, leftMargin, footerY + 205);
+
+    ctx.restore();
+
+    canvas.style.display = "inline-block";
+    pdfBtn.style.display = "inline-block";
+  }
+
+  document.getElementById("gen-btn").onclick = function() {
+    var name = document.getElementById("student-name").value.trim();
+    if (!name) { alert("يرجى كتابة اسمك أولاً."); return; }
+    document.fonts.ready.then(function() {
+      drawCertificate(name);
+    });
+  };
+
+  pdfBtn.onclick = function() {
+    var studentName = document.getElementById("student-name").value.trim() || "certificate";
+    var jsPDF = window.jspdf.jsPDF;
+    // إنشاء مستند PDF بمقاس A4 بالعرض (297mm × 210mm) بدون هوامش
+    var doc = new jsPDF({
+      orientation: "landscape",
+      unit: "mm",
+      format: "a4"
+    });
+
+    var imgData = canvas.toDataURL("image/jpeg", 0.98);
+    doc.addImage(imgData, "JPEG", 0, 0, 297, 210);
+    doc.save("Thagra-Certificate-" + studentName.replace(/\s+/g, "-") + ".pdf");
+  };
+})();
+</script>
+</body>
+</html>

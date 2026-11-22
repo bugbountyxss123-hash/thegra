@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>إنجازاتي — ثغرة</title>
+<meta name="description" content="تقدّمك وشاراتك ونتيجة الاختبار النهائي وشهادة إكمال المسار.">
+<script>try{var t=localStorage.getItem("thagra-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E🛡️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body data-nav="achievements">
+<header id="site-header"></header>
+<main class="wrap">
+<section>
+<h1>إنجازاتي</h1>
+<div class="meter"><strong>تقدّمك: <span class="pct">0%</span></strong><div class="track"><span class="fill"></span></div></div>
+<h2>الشارات <span id="bcount"></span></h2>
+<div class="badges" id="badges"></div>
+<h2>الاختبار النهائي</h2>
+<p id="exam-sum"></p>
+<h2>شهادة الإكمال</h2>
+<div id="cert-area"></div>
+<h2>نسخة احتياطية من تقدّمك</h2>
+<p>تقدّمك محفوظ في هذا المتصفح فقط. صدّره إلى ملف لتنقله إلى جهاز آخر أو تحتفظ به، واستورده متى شئت. الاستيراد يدمج التقدّم ولا يحذف ما عندك.</p>
+<div class="btns"><button class="btn" id="export" type="button">تصدير التقدّم</button><button class="btn" id="import-btn" type="button">استيراد من ملف</button><input type="file" id="import-file" accept="application/json,.json" hidden></div>
+<p class="cap" id="imsg"></p>
+</section>
+</main>
+<footer id="site-footer"></footer>
+<script src="../assets/data.js"></script>
+<script src="../assets/site.js"></script>
+</body>
+</html>
